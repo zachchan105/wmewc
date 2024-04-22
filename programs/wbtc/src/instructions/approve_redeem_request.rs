@@ -4,7 +4,7 @@ use anchor_spl::token::Token;
 use crate::error::ErrorCode;
 use crate::events::{EventKind, RedeemEvent};
 use crate::state::{Config, Merchant, RedeemRequest};
-use crate::utils::validate_btc_transaction;
+use crate::utils::validate_mewc_transaction;
 
 #[derive(Accounts)]
 pub struct ApproveRedeemRequestAccounts<'info> {
@@ -50,7 +50,7 @@ pub fn handler(
         ErrorCode::CustodianDisabled
     );
 
-    validate_btc_transaction(&args.transaction_id)?;
+    validate_mewc_transaction(&args.transaction_id)?;
 
     emit!(RedeemEvent::create(
         &ctx.accounts.redeem_request,

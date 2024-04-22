@@ -14,7 +14,7 @@ use anchor_lang::prelude::*;
 declare_id!("BkeUQWpHeYQDTynE3q3XjWVnmgE6WGoWgDvjfc5aSPMo");
 
 #[program]
-pub mod wbtc {
+pub mod wmewc {
 
     use super::*;
 
@@ -38,18 +38,18 @@ pub mod wbtc {
         instructions::set_custodian::handler(ctx)
     }
 
-    pub fn set_custodian_btc_address(
-        ctx: Context<SetCustodianBtcAddressAccounts>,
-        new_custodian_btc_address: String,
+    pub fn set_custodian_mewc_address(
+        ctx: Context<SetCustodianMewcAddressAccounts>,
+        new_custodian_mewc_address: String,
     ) -> Result<()> {
-        instructions::set_custodian_btc_address::handler(ctx, new_custodian_btc_address)
+        instructions::set_custodian_mewc_address::handler(ctx, new_custodian_mewc_address)
     }
 
-    pub fn set_merchant_btc_address(
-        ctx: Context<SetMerchantBtcAddressAccounts>,
-        new_merchant_btc_address: String,
+    pub fn set_merchant_mewc_address(
+        ctx: Context<SetMerchantMewcAddressAccounts>,
+        new_merchant_mewc_address: String,
     ) -> Result<()> {
-        instructions::set_merchant_btc_address::handler(ctx, new_merchant_btc_address)
+        instructions::set_merchant_mewc_address::handler(ctx, new_merchant_mewc_address)
     }
 
     pub fn create_merchant(

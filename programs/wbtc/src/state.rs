@@ -23,8 +23,8 @@ static_assertions::const_assert!(Merchant::LEN > std::mem::size_of::<Merchant>()
 #[derive(Debug)]
 pub struct Merchant {
     pub authority: Pubkey,
-    pub btc_address: String,
-    pub custodian_btc_address: String,
+    pub mewc_address: String,
+    pub custodian_mewc_address: String,
     pub enabled: bool,
 }
 

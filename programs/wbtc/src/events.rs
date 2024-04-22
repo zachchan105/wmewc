@@ -54,7 +54,7 @@ impl MintEvent {
             client: req.client_token_account,
             amount: req.amount,
             transaction_id: req.transaction_id.clone(),
-            deposit_address: merch.btc_address.clone(),
+            deposit_address: merch.mewc_address.clone(),
             timestamp: Clock::get()?.unix_timestamp as u64,
             kind,
         })
@@ -73,7 +73,7 @@ impl RedeemEvent {
             merchant: req.merchant,
             amount: req.amount,
             transaction_id: tx_id,
-            deposit_address: merch.btc_address.clone(),
+            deposit_address: merch.mewc_address.clone(),
             timestamp: Clock::get()?.unix_timestamp as u64,
             kind,
         })

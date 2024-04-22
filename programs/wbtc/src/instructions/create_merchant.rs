@@ -3,7 +3,7 @@ use anchor_lang::prelude::*;
 use crate::constants::MERCHANT_SEED_PREFIX;
 use crate::error::ErrorCode;
 use crate::state::{Config, Merchant};
-use crate::utils::validate_btc_address;
+use crate::utils::validate_mewc_address;
 
 #[derive(Accounts)]
 #[instruction(args: CreateMerchantArgs)]
@@ -28,16 +28,16 @@ pub struct CreateMerchantAccounts<'info> {
 #[derive(Debug, Clone, AnchorDeserialize, AnchorSerialize)]
 pub struct CreateMerchantArgs {
     pub merchant: Pubkey,
-    pub merchant_btc_address: String,
+    pub merchant_mewc_address: String,
 }
 
 pub fn handler(ctx: Context<CreateMerchantAccounts>, args: CreateMerchantArgs) -> Result<()> {
     let merchant = &mut ctx.accounts.merchant_info;
 
-    validate_btc_address(&args.merchant_btc_address)?;
+    validate_mewc_address(&args.merchant_mewc_address)?;
 
     merchant.authority = args.merchant;
-    merchant.btc_address = args.merchant_btc_address;
+    merchant.mewc_address = args.merchant_mewc_address;
 
     Ok(())
 }

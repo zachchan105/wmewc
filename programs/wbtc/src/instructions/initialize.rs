@@ -5,7 +5,7 @@ use anchor_spl::token::{Mint, Token};
 
 use crate::error::ErrorCode;
 #[cfg(not(feature = "localnet"))]
-use crate::program::Wbtc;
+use crate::program::Wmewc;
 
 use crate::gen_mint_seeds;
 use crate::{constants::CONFIG_SEED_PREFIX, constants::MINT_SEED_PREFIX, state::Config};
@@ -119,7 +119,7 @@ pub fn handler(ctx: Context<InitializeAccounts>, args: InitializeArgs) -> Result
 fn validate_upgrade_authority(authority: Pubkey, remaining_accounts: &[AccountInfo]) -> Result<()> {
     match remaining_accounts {
         [prog, prog_data] => {
-            let program: Program<Wbtc> = Program::try_from(prog)?;
+            let program: Program<Wmewc> = Program::try_from(prog)?;
             let program_data: Account<ProgramData> = Account::try_from(prog_data)?;
 
             require!(

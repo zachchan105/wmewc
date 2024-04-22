@@ -8,7 +8,7 @@ import {
   ProgramAccount,
   Wallet,
 } from "@coral-xyz/anchor";
-import { Wbtc } from "../../target/types/wbtc";
+import { Wmewc } from "../../target/types/wmewc";
 import { PublicKey, Keypair } from "@solana/web3.js";
 import {
   createAssociatedTokenAccount,
@@ -22,21 +22,21 @@ import {
   TypeDef,
 } from "@coral-xyz/anchor/dist/cjs/program/namespace/types";
 
-export type Config = TypeDef<Wbtc["accounts"][0], Wbtc>;
-export type Merchant = TypeDef<Wbtc["accounts"][1], Wbtc>;
-export type MintRequest = TypeDef<Wbtc["accounts"][2], Wbtc>;
-export type RedeemRequest = TypeDef<Wbtc["accounts"][3], Wbtc>;
+export type Config = TypeDef<Wmewc["accounts"][0], Wmewc>;
+export type Merchant = TypeDef<Wmewc["accounts"][1], Wmewc>;
+export type MintRequest = TypeDef<Wmewc["accounts"][2], Wmewc>;
+export type RedeemRequest = TypeDef<Wmewc["accounts"][3], Wmewc>;
 
-export type InitializeArgs = TypeDef<Wbtc["types"][4], Wbtc>;
+export type InitializeArgs = TypeDef<Wmewc["types"][4], Wmewc>;
 
 export type CreateMerchantKeys = InstructionAccountAddresses<
-  Wbtc,
-  Wbtc["instructions"][6]
+  Wmewc,
+  Wmewc["instructions"][6]
 >;
 
-export class WbtcClient {
+export class WmewcClient {
   provider: AnchorProvider;
-  program: Program<Wbtc>;
+  program: Program<Wmewc>;
   admin: Keypair;
   adminWallet: Wallet;
 
@@ -53,7 +53,7 @@ export class WbtcClient {
     });
     setProvider(this.provider);
 
-    this.program = workspace.Wbtc as Program<Wbtc>;
+    this.program = workspace.Wmewc as Program<Wmewc>;
 
     this.admin = Keypair.fromSecretKey(
       new Uint8Array(JSON.parse(readFileSync(adminKey).toString()))
@@ -148,7 +148,7 @@ export class WbtcClient {
   // instructions
 
   async initialize(config: InitializeArgs) {
-    let wbtcProgramData = PublicKey.findProgramAddressSync(
+    let wmewcProgramData = PublicKey.findProgramAddressSync(
       [this.program.programId.toBuffer()],
       new PublicKey("BPFLoaderUpgradeab1e11111111111111111111111")
     )[0];
@@ -166,7 +166,7 @@ export class WbtcClient {
       {
         isSigner: false,
         isWritable: false,
-        pubkey: wbtcProgramData,
+        pubkey: wmewcProgramData,
       },
     ];
     console.log("1");
@@ -236,17 +236,17 @@ export class WbtcClient {
 
   async createMerchant(
     merchant: PublicKey,
-    merchantBtcAddress: string
+    merchantMewcAddress: string
   ): Promise<string> {
     return await this.program.methods
-      .createMerchant({ merchant, merchantBtcAddress })
+      .createMerchant({ merchant, merchantMewcAddress })
       .accounts({ config: this.configKey })
       .rpc();
   }
 
   async createMerchantWithSquads(
     merchant: PublicKey,
-    merchantBtcAddress: string,
+    merchantMewcAddress: string,
     multisigAddress: PublicKey,
     approve: boolean
   ): Promise<PublicKey> {
@@ -255,7 +255,7 @@ export class WbtcClient {
     const msTx = await this.squads.createTransaction(multisigAddress, 1);
 
     const ixBuilder = this.program.methods
-      .createMerchant({ merchant, merchantBtcAddress })
+      .createMerchant({ merchant, merchantMewcAddress })
       .accounts({
         config: this.configKey,
         merchantAuthority: cfg.merchantAuthority,
@@ -315,10 +315,10 @@ export class WbtcClient {
 
   async getCreateMerchantKeys(
     merchant: PublicKey,
-    merchantBtcAddress: string
+    merchantMewcAddress: string
   ): Promise<CreateMerchantKeys> {
     let builder = this.program.methods
-      .createMerchant({ merchant, merchantBtcAddress })
+      .createMerchant({ merchant, merchantMewcAddress })
       .accounts({ config: this.configKey });
 
     let keys = await builder.pubkeys();
@@ -576,17 +576,17 @@ export class WbtcClient {
     return msTx.publicKey;
   }
 
-  async setCustodianBtcAddress(newBtcAddress: string, merchant: PublicKey): Promise<string> {
+  async setCustodianMewcAddress(newmewcAddress: string, merchant: PublicKey): Promise<string> {
     return this.program.methods
-      .setCustodianBtcAddress(newBtcAddress)
+      .setCustodianMewcAddress(newmewcAddress)
       .accounts({ config: this.configKey, merchant })
       .rpc();
   }
 
-  async setMerchantBtcAddress(newBtcAddress: string): Promise<string> {
+  async setMerchantMewcAddress(newmewcAddress: string): Promise<string> {
     let merchant = this.getMerchantKey(this.admin.publicKey);
     return this.program.methods
-      .setMerchantBtcAddress(newBtcAddress)
+      .setMerchantMewcAddress(newmewcAddress)
       .accounts({ merchant })
       .rpc();
   }

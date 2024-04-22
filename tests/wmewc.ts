@@ -1,6 +1,6 @@
 import * as anchor from "@coral-xyz/anchor";
 import { BN, Program } from "@coral-xyz/anchor";
-import { Wbtc } from "../target/types/wbtc";
+import { Wmewc } from "../target/types/wmewc";
 import { PublicKey } from "@solana/web3.js";
 import { assert } from "chai";
 import {
@@ -19,12 +19,12 @@ import {
 } from "@metaplex-foundation/mpl-token-metadata";
 import { findNftByMintOperation } from "@metaplex-foundation/js";
 
-describe("wbtc", () => {
+describe("wmewc", () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.AnchorProvider.env());
 
   const connection = anchor.getProvider().connection;
-  const program = anchor.workspace.Wbtc as Program<Wbtc>;
+  const program = anchor.workspace.Wmewc as Program<Wmewc>;
   const authority = anchor.web3.Keypair.generate();
   const merchantAuthority = anchor.web3.Keypair.generate();
   const merchant = anchor.web3.Keypair.generate();
@@ -36,15 +36,15 @@ describe("wbtc", () => {
 
   const custodian = anchor.web3.Keypair.generate();
 
-  const validBtcAddress = "3Mue5W8CcHBS53JSHUpQoJyAbqfCUBqjFC";
+  const validMewcAddress = "3Mue5W8CcHBS53JSHUpQoJyAbqfCUBqjFC";
   const tooLongAddress =
     "verylongaddythatissupposedtobeinvalidverylongaddythatissupposedtobeinvalid";
   const tooShortAddress = "shortaddy";
-  const validBtcTransaction =
+  const validMewcTransaction =
     "a2e62d55f27d033ca8e5e296f1637517fdec92e48b51eb7eb64a9beb500a88bb";
 
-  const wbtcProgram = program.programId;
-  const wbtcProgramData = PublicKey.findProgramAddressSync(
+  const wmewcProgram = program.programId;
+  const wmewcProgramData = PublicKey.findProgramAddressSync(
     [program.programId.toBuffer()],
     new PublicKey("BPFLoaderUpgradeab1e11111111111111111111111")
   )[0];
@@ -97,8 +97,8 @@ describe("wbtc", () => {
         authority: authority.publicKey,
         merchantAuthority: merchantAuthority.publicKey,
         custodian: custodian.publicKey,
-        name: "Wrapped BTC",
-        symbol: "wBTC",
+        name: "Wrapped MEWC",
+        symbol: "wMEWC",
         uri: "",
       })
       .pubkeys();
@@ -114,8 +114,8 @@ describe("wbtc", () => {
         authority: authority.publicKey,
         merchantAuthority: merchantAuthority.publicKey,
         custodian: custodian.publicKey,
-        name: "Wrapped BTC",
-        symbol: "wBTC",
+        name: "Wrapped MEWC",
+        symbol: "wMEWC",
         uri: "",
       })
       .accounts({ metadata, tokenMetadataProgram: TOKEN_METADATA_PROGRAM })
@@ -133,7 +133,7 @@ describe("wbtc", () => {
       const aa = await program.methods
         .createMerchant({
           merchant: merchantAuthority.publicKey,
-          merchantBtcAddress: tooShortAddress,
+          merchantMewcAddress: tooShortAddress,
         })
         .accounts({ merchantAuthority: merchantAuthority.publicKey, config })
         .signers([merchantAuthority])
@@ -146,7 +146,7 @@ describe("wbtc", () => {
       const tx = await program.methods
         .createMerchant({
           merchant: merchantAuthority.publicKey,
-          merchantBtcAddress: tooLongAddress,
+          merchantMewcAddress: tooLongAddress,
         })
         .accounts({ merchantAuthority: merchantAuthority.publicKey, config })
         .signers([merchantAuthority])
@@ -159,7 +159,7 @@ describe("wbtc", () => {
     let tx = await program.methods
       .createMerchant({
         merchant: merchant.publicKey,
-        merchantBtcAddress: validBtcAddress,
+        merchantMewcAddress: validMewcAddress,
       })
       .accounts({ merchantAuthority: merchantAuthority.publicKey, config })
       .signers([merchantAuthority])
@@ -173,7 +173,7 @@ describe("wbtc", () => {
     tx = await program.methods
       .createMerchant({
         merchant: merchant2.publicKey,
-        merchantBtcAddress: validBtcAddress,
+        merchantMewcAddress: validMewcAddress,
       })
       .accounts({
         merchantAuthority: merchantAuthority.publicKey,
@@ -270,13 +270,13 @@ describe("wbtc", () => {
         .signers([merchant])
         .rpc();
     } catch (e) {
-      assert.strictEqual("InvalidCustodianBtcAddress", e.error.errorCode.code);
+      assert.strictEqual("InvalidCustodianMewcAddress", e.error.errorCode.code);
     }
 
 
     await assertInvalidTransaction(
       program.methods
-      .setCustodianBtcAddress(validBtcAddress)
+      .setCustodianMewcAddress(validMewcAddress)
       .accounts({
         custodian: custodian.publicKey,
         config,
@@ -298,7 +298,7 @@ describe("wbtc", () => {
       .rpc();
 
     await program.methods
-      .setCustodianBtcAddress(validBtcAddress)
+      .setCustodianMewcAddress(validMewcAddress)
       .accounts({
         custodian: custodian.publicKey,
         config,
@@ -695,7 +695,7 @@ describe("wbtc", () => {
     await assertInvalidTransaction(
       program.methods
         .approveRedeemRequest({
-          transactionId: validBtcTransaction,
+          transactionId: validMewcTransaction,
         })
         .accounts({
           config,
@@ -711,7 +711,7 @@ describe("wbtc", () => {
     await assertInvalidTransaction(
       program.methods
         .approveRedeemRequest({
-          transactionId: "invalidbtctx",
+          transactionId: "invalidmewctx",
         })
         .accounts({
           config,
@@ -727,7 +727,7 @@ describe("wbtc", () => {
     await assertInvalidTransaction(
       program.methods
         .approveRedeemRequest({
-          transactionId: validBtcTransaction,
+          transactionId: validMewcTransaction,
         })
         .accounts({
           config,
@@ -742,7 +742,7 @@ describe("wbtc", () => {
 
     await program.methods
       .approveRedeemRequest({
-        transactionId: validBtcTransaction,
+        transactionId: validMewcTransaction,
       })
       .accounts({
         config,

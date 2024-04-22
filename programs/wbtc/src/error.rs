@@ -25,9 +25,9 @@ pub enum ErrorCode {
     Disabled,
     #[msg("the length of the transaction is invalid")]
     InvalidTransactionLength,
-    #[msg("the given address length is too long for a btc address (>62 characters)")]
+    #[msg("the given address length is too long for a mewc address (>62 characters)")]
     AddressTooLong,
-    #[msg("the given address length is too short for a btc address (<26 characters)")]
+    #[msg("the given address length is too short for a mewc address (<26 characters)")]
     AddressTooShort,
     #[msg("the address contains invalid (non-ascii) characters")]
     InvalidAddressCharacters,
@@ -41,6 +41,6 @@ pub enum ErrorCode {
     InvalidNewAuthority,
     #[msg("the new custodian is invalid (collision with authority/new_authority")]
     InvalidNewCustodian,
-    #[msg("the custodian btc deposit address is invalid for the given merchant")]
-    InvalidCustodianBtcAddress,
+    #[msg("the custodian mewc deposit address is invalid for the given merchant")]
+    InvalidCustodianMewcAddress,
 }

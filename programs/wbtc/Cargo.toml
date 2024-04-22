@@ -1,14 +1,14 @@
 [package]
-name = "wbtc"
+name = "wmewc"
 version = "0.1.0"
-description = "wBTC wrapping contract"
+description = "wMEWC wrapping contract"
 edition = "2021"
 maintainers = ["Solana Maintainers <maintainers@solana.foundation>"]
 license = "Apache-2.0"
 
 [lib]
 crate-type = ["cdylib", "lib"]
-name = "wbtc"
+name = "wmewc"
 
 [features]
 no-entrypoint = []

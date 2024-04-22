@@ -1,7 +1,7 @@
 import { BN } from "@coral-xyz/anchor";
 import { PublicKey } from "@solana/web3.js";
 import { Command } from "commander";
-import { WbtcClient } from "./client";
+import { WmewcClient } from "./client";
 import { homedir } from "os";
 
 const DEVNET_URL = "https://api.devnet.solana.com";
@@ -29,7 +29,7 @@ function initClient(clusterUrl: string, adminKeyPath: string) {
   isDevnet = clusterUrl === "https://api.devnet.solana.com";
   console.log("Path='", adminKeyPath, "'");
   process.env["ANCHOR_WALLET"] = adminKeyPath;
-  client = new WbtcClient(clusterUrl, adminKeyPath);
+  client = new WmewcClient(clusterUrl, adminKeyPath);
   console.log("Client Initialized");
 }
 
@@ -67,7 +67,7 @@ async function createRedeemRequest(tokenSource: PublicKey, amount: BN) {
 
 async function createMerchant(
   merchant: PublicKey,
-  merchantBtcAddress: string,
+  merchantMewcAddress: string,
   multisig: PublicKey
 ) {
   console.log("msig: ", multisig);
@@ -75,7 +75,7 @@ async function createMerchant(
   console.log("Creating merchant using squads multisig transactions...");
   let squadsTx = await client.createMerchantWithSquads(
     merchant,
-    merchantBtcAddress,
+    merchantMewcAddress,
     multisig,
     true
   );
@@ -88,8 +88,8 @@ async function viewMerchant(merchant: PublicKey) {
 
   console.log("Merchant - ", merchant);
   console.log(" authority: ", merchantInfo.authority);
-  console.log(" btc_address: ", merchantInfo.btcAddress);
-  console.log(" custodian_btc_address: ", merchantInfo.custodianBtcAddress);
+  console.log(" mewc_address: ", merchantInfo.mewcAddress);
+  console.log(" custodian_mewc_address: ", merchantInfo.custodianMewcAddress);
   console.log(" enabled: ", merchantInfo.enabled);
 }
 
@@ -186,8 +186,8 @@ async function toggleFunctionality(
   printSquadsLinkFromTransaction(squadsTx, multisig);
 }
 
-async function setCustodianBtcAddress(merchant: PublicKey, btcAddress: string) {
-  return await client.setCustodianBtcAddress(btcAddress, merchant);
+async function setCustodianMewcAddress(merchant: PublicKey, mewcAddress: string) {
+  return await client.setCustodianMewcAddress(mewcAddress, merchant);
 }
 
 
@@ -344,7 +344,7 @@ async function approveRedeemRequest(id: BN, tx: string) {
       "Creates a mint request. Can only be executed by an authorised merchant."
     )
     .argument("<Pubkey>", "The client wallet to receive the wrapped tokens")
-    .argument("<string>", "The transaction of btc into the custodian")
+    .argument("<string>", "The transaction of mewc into the custodian")
     .argument("<number>", "The amount of tokens to mint")
     .action(async (pk, tx, amount) => {
       await createMintRequest(new BN(amount), new PublicKey(pk), tx);
@@ -367,12 +367,12 @@ async function approveRedeemRequest(id: BN, tx: string) {
       "Creates a merchant. Must be executed by a small DAO member. This will create a Squads transaction that should be"
     )
     .argument("<pubkey>", "The merchant wallet public key")
-    .argument("<btc address>", "The merchant btc address")
+    .argument("<mewc address>", "The merchant mewc address")
     .argument("<pubkey>", "The multisig account address (small DAO)")
-    .action(async (pk, btcAddress, multisig) => {
+    .action(async (pk, mewcAddress, multisig) => {
       await createMerchant(
         new PublicKey(pk),
-        btcAddress,
+        mewcAddress,
         new PublicKey(multisig)
       );
     });
@@ -473,24 +473,24 @@ async function approveRedeemRequest(id: BN, tx: string) {
     });
 
   program
-    .command("set-custodian-btc-address")
+    .command("set-custodian-mewc-address")
     .description(
-      "Changes the current custodian btc address for a given merchant"
+      "Changes the current custodian mewc address for a given merchant"
     )
     .argument("<pubkey>", "The merchant address")
-    .argument("<string>", "The custodian btc deposit address")
+    .argument("<string>", "The custodian mewc deposit address")
     .option(
       "-i",
       "Fetch the merchant directly instead of deriving from wallet address."
     )
-    .action(async (pk, btcAddress, opts) => {
+    .action(async (pk, mewcAddress, opts) => {
       let merchant = new PublicKey(pk);
 
       if (!opts.i) {
         merchant = client.getMerchantKey(merchant);
       } 
       
-      await setCustodianBtcAddress(merchant, btcAddress);
+      await setCustodianMewcAddress(merchant, mewcAddress);
     });
 
   program

@@ -5,7 +5,7 @@ use crate::constants::MINT_REQUEST_SEED_PREFIX;
 use crate::error::ErrorCode;
 use crate::events::{EventKind, MintEvent};
 use crate::state::{Config, Merchant, MintRequest};
-use crate::utils::{validate_btc_address, validate_btc_transaction};
+use crate::utils::{validate_mewc_address, validate_mewc_transaction};
 
 #[derive(Accounts)]
 #[instruction(args: CreateMintRequestArgs)]
@@ -48,11 +48,11 @@ pub fn handler(ctx: Context<CreateMintRequestAccounts>, args: CreateMintRequestA
     require!(merchant.enabled, ErrorCode::MerchantDisabled);
 
     require!(
-        validate_btc_address(&merchant.custodian_btc_address).is_ok(),
-        ErrorCode::InvalidCustodianBtcAddress
+        validate_mewc_address(&merchant.custodian_mewc_address).is_ok(),
+        ErrorCode::InvalidCustodianMewcAddress
     );
 
-    validate_btc_transaction(&args.transaction_id)?;
+    validate_mewc_transaction(&args.transaction_id)?;
 
     mint_request.merchant = merchant.key();
     mint_request.amount = args.amount;

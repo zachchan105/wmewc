@@ -1,5 +1,5 @@
 # Summary
-This is the Solana version of the WBTC contracts that enable wrapping the tokens in collaboration between merchants and a custodian 3rd party. The biggest focus of the program is to create a traceable chain of events on-chain to allow anyone to quickly be able to verify if the reserves among the custodian match the expected wrapped issuance along with matching any minting and redemtpions with their respective transactions on the native Token's chain being wrapped.
+This is the Solana version of the WMEWC contracts that enable wrapping the tokens in collaboration between merchants and a custodian 3rd party. The biggest focus of the program is to create a traceable chain of events on-chain to allow anyone to quickly be able to verify if the reserves among the custodian match the expected wrapped issuance along with matching any minting and redemtpions with their respective transactions on the native Token's chain being wrapped.
 
 Unlike in other chains, there will be just a single _smart contract_ capable of handling all the logistics given that we can rely on Solana\`s native `Tokenkeg` program to deal with token minting/burning and `Squads` to handle the intricacies of DAO managament.
 
@@ -22,7 +22,7 @@ big dao - BoY4qapYaJpHrbpPDmhRpMwzMTWgYJhx3ZYkViEDYLts
 This program has four different accounts:
 
 * Config: contains basic global info regarding the state of the program like the authorities, the token mint, whether certain functionality is enabled or disabled and information related to the custodian. There is only one config per the entire program.
-* Merchant: contains wallet address and btc addresses on merchants
+* Merchant: contains wallet address and mewc addresses on merchants
 * MintRequest: temporary state for mint requests. Stores info on the client, merchant and amounts.
 * RedeemRequest: temporary state for redeem requests. Stores info on the merchant and amounts.
 
@@ -38,13 +38,13 @@ The following instructions either create or set basic functioning paramethers:
 
 * initialize - creates the `Config` account, and the token mint. Sets the two authorities, custodian info and mint decimals.
 * claim_authority - acts as a security buffer after changing the authority, in case of a wrongly typed addresses, the previous authority can call `set_authority` again. On initialize, the previous authority is set as the signer of `initialize`, and should be the calling `set_authority` if unable to call `claim_authority` after `initialize`
-* create_merchant - creates a `Merchant`. Requires the merchant wallet and btc address.
+* create_merchant - creates a `Merchant`. Requires the merchant wallet and mewc address.
 * delete_merchant - deletes a `Merchant`.
 * set_authority - changes the authority address.
 * set_merchant_authority - changes the `merchant_authority` address.
-* set_custodian_btc_address - changes the custodian btc deposit address stored in a given `Merchant` account.
+* set_custodian_mewc_address - changes the custodian mewc deposit address stored in a given `Merchant` account.
 * set_custodian - changes the wallet that the custodian can use to interact with the program.
-* set_merchant_btc_address - changes the stored btc address for a given `Merchant`.
+* set_merchant_mewc_address - changes the stored mewc address for a given `Merchant`.
 
 NOTE: there is no `set_merchant` as it would break the PDA assumptions on account creation. Similar functionality can be easily done by calling `delete_merchant` and `create_merchant`. 
 
@@ -85,8 +85,8 @@ The following table shows the permissions for calling each instruction:
 | claim_authority              |the new one|                    |          |           |
 | set_merchant_authority       |     x     |                    |          |           |
 | set_custodian                |     x     |                    |          |     x     |
-| set_custodian_btc_address    |           |                    |          |     x     |
-| set_merchant_btc_address     |           |                    |     x    |           |
+| set_custodian_mewc_address    |           |                    |          |     x     |
+| set_merchant_mewc_address     |           |                    |     x    |           |
 |                              |           |                    |          |           |
 | toggle_functionality_enabled |     x     |                    |          |           |
 | toggle_merchant_enabled      |           |          x         |          |           |

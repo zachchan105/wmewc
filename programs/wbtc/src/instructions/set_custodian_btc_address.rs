@@ -2,10 +2,10 @@ use anchor_lang::prelude::*;
 
 use crate::error::ErrorCode;
 use crate::state::{Config, Merchant};
-use crate::utils::validate_btc_address;
+use crate::utils::validate_mewc_address;
 
 #[derive(Accounts)]
-pub struct SetCustodianBtcAddressAccounts<'info> {
+pub struct SetCustodianMewcAddressAccounts<'info> {
     #[account(mut)]
     pub custodian: Signer<'info>,
 
@@ -17,17 +17,17 @@ pub struct SetCustodianBtcAddressAccounts<'info> {
 }
 
 pub fn handler(
-    ctx: Context<SetCustodianBtcAddressAccounts>,
-    new_custodian_btc_address: String,
+    ctx: Context<SetCustodianMewcAddressAccounts>,
+    new_custodian_mewc_address: String,
 ) -> Result<()> {
     require!(
         ctx.accounts.config.custodian_enabled,
         ErrorCode::CustodianDisabled
     );
 
-    validate_btc_address(&new_custodian_btc_address)?;
+    validate_mewc_address(&new_custodian_mewc_address)?;
 
-    ctx.accounts.merchant.custodian_btc_address = new_custodian_btc_address;
+    ctx.accounts.merchant.custodian_mewc_address = new_custodian_mewc_address;
 
     Ok(())
 }
